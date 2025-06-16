@@ -3,7 +3,7 @@ import { Title } from 'src/components/Title/Title'
 
 export const PageLayout = ({ content, header }: { content: React.ReactNode, header?: React.ReactNode}) => {
     return (
-        <div className="max-w-[400px] m-auto ">
+        <div className="m-auto sm:max-w-[400px]">
           
             <header className="h-32 p-4" style={{ border: '1px solid red', background: '#F54632' }}>
                 <Title text="Discover" style={{ color: '#FAF8F5' }} />

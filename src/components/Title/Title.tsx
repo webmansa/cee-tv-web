@@ -7,5 +7,5 @@ interface TitleComponentProps extends React.HTMLAttributes<HTMLHeadingElement> {
 
 
 export const Title: React.FC<TitleComponentProps> = ({ text, ...props }) => (
-    <h2 className={classNames("mb-4 font-medium", `${props.className}`)} {...props}>{text}</h2>
+    <h2 className={classNames("mb-4 font-medium text-xl", `${props.className}`)} {...props}>{text}</h2>
 )

@@ -63,11 +63,11 @@ function Home() {
 
     const latestMovies: Array<{ title: string; year: string; imgUrl: string; id: string }> = movies?.results?.map(({ title, release_date, poster_path, id }: IMovie) => ({ title, year: release_date, imgUrl: getImdbImageUrl(poster_path, 'w200'), id }))
 
-    const lastestSeries: Array<{ title: string; year: string; imgUrl: string }> = series?.results?.map(({ title, release_date, poster_path, name }: IMovie) => ({ title: title || name, year: release_date, imgUrl: getImdbImageUrl(poster_path, 'w200')  }))
+    const lastestSeries: Array<{ title: string; year: string; imgUrl: string; id: string }> = series?.results?.map(({ title, release_date, poster_path, name, id }: IMovie) => ({ title: title || name, year: release_date, imgUrl: getImdbImageUrl(poster_path, 'w200'), id }))
 
     // console.log(series, 'series')
     console.log(movies, 'movies')
-    // const components = ['gallery, recommended, latest movies, series,']
+    // const components = ['home, upcoming, favorites,']
 
     return (
         <PageLayout
@@ -83,7 +83,7 @@ function Home() {
                     {
 
                         latestMovies && latestMovies.map(({ title, year, imgUrl, id }) => (
-                            <Link to={`/movie/$id`} params={{ id }}>
+                            <Link to='/movie/$id' params={{ id }}>
                                 <MovieCard title={title} imgUrl={imgUrl} year={year} />
                             </Link>
                         ))
@@ -93,9 +93,16 @@ function Home() {
                 <Container text="Latest Series">
                     {
 
-                        lastestSeries && lastestSeries.map(({ title, year, imgUrl }) => (<MovieCard title={title} imgUrl={imgUrl} year={year} />))
+                            lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
                     }
-                </Container>
+                    </Container>
+                    
+                    {/* <Container text="Upcoming Movies">
+                        {
+
+                            lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
+                        }
+                    </Container> */}
             </>
         } />
     )
