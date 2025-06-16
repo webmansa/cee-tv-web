@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { MovieDetail } from "src/types/movieDetails.types";
+import { SeriesDetail } from "src/types/seriesDetails.types";
 import { get } from "src/utils/apiClient";
 
 export const useGetSeriesDetails = (id: string) => {
   return useQuery({
     queryKey: ["series-detail"],
-    queryFn: async () => get<MovieDetail>(`/movie/${id}`),
+    queryFn: async () => get<SeriesDetail>(`/tv/${id}`),
     enabled: true,
   });
 };

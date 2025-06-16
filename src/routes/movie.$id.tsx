@@ -12,7 +12,6 @@ function MovieDetail() {
     const movieId = Route.useLoaderData()
 
     const { data, isLoading } = useGetMovieDetail(movieId)
-    console.log(data, 'movie detail 005082')
 
     return (
         <PageLayout content={
@@ -29,7 +28,7 @@ function MovieDetail() {
                         <img src="/src/images/icons/favorite.svg" className="w-[30px]" />
                     </div>
                     <div className="flex gap-2">
-                        <span className="font-bold">ratings: <em style={{ color: '#005082' }}>{data?.vote_average ? Math.round(data.vote_average) : 'N/A'}</em></span>
+                        <span className="font-bold">ratings: <em style={{ color: '#005082' }}>{data?.vote_average ? data.vote_average : 'N/A'}</em></span>
                         <span className="font-bold">status: <em className="text-sm" style={{ color: '#005082' }}>{data?.status}</em></span>
                     </div>
 

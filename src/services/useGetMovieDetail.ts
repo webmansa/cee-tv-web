@@ -6,7 +6,7 @@ import { get } from "src/utils/apiClient";
 export const useGetMovieDetail = (id: string) => {
   return useQuery({
     queryKey: ["movie-detail"],
-    queryFn: async () => get<MovieDetail>(`/tv/${id}`),
+    queryFn: async () => get<MovieDetail>(`/movie/${id}`),
     enabled: true,
   });
 };
