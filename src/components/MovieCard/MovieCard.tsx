@@ -1,15 +1,12 @@
-import { Title } from "../Title/Title";
 
 export const MovieCard = ({ imgUrl, title, year }: { imgUrl: string; title: string;  year: string}) => {
     return (
-        <article className="mt-8">
-         <Title text="Latest Movies" style={{ color: '#FAF8F5'}} />
-         
-            <figure>
+        <article className="cursor-pointer">
+            <figure className="w-[200px]">
                 <img
                     src={imgUrl}
                     alt={title} />
-                <figcaption>{title}</figcaption>
+                <figcaption className="rounded-[50px] px-1.5 flex items-center text-sm mt-3 h-[20px] justify-center" style={{ background: '#FAF8F5' }}>{title}</figcaption>
             </figure>
         </article>
     )
