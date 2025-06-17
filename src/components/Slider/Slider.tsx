@@ -13,13 +13,16 @@ export const Slider = ({ galleries }: { galleries: Gallery[] }) => {
             spaceBetween={50}
             slidesPerView={1}
             loop
-            onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
+            autoplay={{ delay: 2000, disableOnInteraction: false }}
+            // onSlideChange={() => console.log('slide change')}
+            // onSwiper={(swiper) => console.log(swiper)}
         >
             {
-                galleries.map((gallery) => <SwiperSlide>
-                    <img src={gallery.item} alt={gallery.title} />
-                </SwiperSlide>)
+            galleries.map((gallery) => (
+                <SwiperSlide key={gallery.item}>
+                <img src={gallery.item} alt={gallery.title} />
+                </SwiperSlide>
+            ))
             }
         </Swiper>
     )

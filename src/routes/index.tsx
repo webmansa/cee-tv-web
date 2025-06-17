@@ -10,6 +10,8 @@ import { PageLayout } from 'src/layouts/PageLayout'
 import { useGetMovies } from 'src/services/useGetMovies'
 import { useGetRecommendations } from 'src/services/useGetRecommendations'
 import { useGetSeries } from 'src/services/useGetSeries'
+import { useGetUpcoming } from 'src/services/useGetUpcoming'
+import { UpcomingMovieResult } from 'src/types/upcomingMovie.types'
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl'
 
 const filePath = 'count.txt'
@@ -40,8 +42,8 @@ export const Route = createFileRoute('/')({
 
 type Movie = { poster_path: string; title: string }
 
-interface IMovie {
-    id: string
+export interface IMovie {
+    id: number
     title: string
     poster_path: string
     release_date: string
@@ -55,6 +57,7 @@ function Home() {
     const { data: recommendations, isLoading: isRecommendationsLoading } = useGetRecommendations()
     const { data: movies, isLoading: isMoviesLoading } = useGetMovies()
     const { data: series, isLoading: isSeriesLoading } = useGetSeries()
+    const { data: upcoming } = useGetUpcoming()
 
 
     const moviePosters = recommendations?.results.slice(0, 10).map(
@@ -65,9 +68,18 @@ function Home() {
 
     const lastestSeries: Array<{ title: string; year: string; imgUrl: string; id: string }> = series?.results?.map(({ title, release_date, poster_path, name, id }: IMovie) => ({ title: title || name, year: release_date, imgUrl: getImdbImageUrl(poster_path, 'w200'), id }))
 
-    // console.log(series, 'series')
-    console.log(movies, 'movies')
+    const upcomingMovies: Array<{ title: string; year: string; imgUrl: string | null; id: string | number }> = upcoming?.results?.map(
+        ({ title, release_date, poster_path, id }: UpcomingMovieResult) => ({
+            title: title,
+            year: typeof release_date === 'string' ? release_date : new Date(release_date).toLocaleDateString(),
+            imgUrl: getImdbImageUrl(poster_path, 'w200'),
+            id: id
+        })
+    ) ?? []
+
     // const components = ['home, upcoming, favorites,']
+
+    console.log(upcoming, 'upcoming show')
 
     return (
         <PageLayout
@@ -93,16 +105,16 @@ function Home() {
                 <Container text="Latest Series">
                     {
 
-                            lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
+                        lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
                     }
                     </Container>
                     
-                    {/* <Container text="Upcoming Movies">
-                        {
+                <Container text="Upcoming Movies">
+                    {
 
-                            lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
-                        }
-                    </Container> */}
+                        upcomingMovies.length && upcomingMovies.map(({ title, year, imgUrl, id }) => (<Link to='/movie/$id' params={{ id: id.toString() }}><MovieCard title={title} imgUrl={imgUrl || ''} year={year} /></Link>))
+                    }
+                </Container>
             </>
         } />
     )

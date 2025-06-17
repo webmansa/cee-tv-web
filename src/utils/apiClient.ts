@@ -12,7 +12,13 @@ async function apiClient<T = any, B = any>(
   customHeaders: HeadersInit = {},
   customConfig: Partial<RequestConfig> = {}
 ): Promise<T> {
-  const url = `${BASE_URL}${endpoint}`;
+    const url = `${BASE_URL}${endpoint}`;
+    
+    // const url = new URL(`${BASE_URL}${endpoint}`);
+    // Object.keys(queryParams).forEach((key) =>
+    //   url.searchParams.append(key, queryParams[key])
+    // );
+    // url.toString()
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",

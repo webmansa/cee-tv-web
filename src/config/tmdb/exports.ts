@@ -25,7 +25,7 @@ const tmdb = {
     return "/movie/upcoming";
   },
   get search() {
-    return "";
+    return "/search/multi?query=";
   },
 };
 
