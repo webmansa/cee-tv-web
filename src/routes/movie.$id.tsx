@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { SocialActions } from 'src/components/SocialActions/SocialActions'
 import { PageLayout } from 'src/layouts/PageLayout'
 import { useGetMovieDetail } from 'src/services/useGetMovieDetail'
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl'
@@ -40,10 +41,7 @@ function MovieDetail() {
                 }
                 
                 <div className="p-4 relative" style={{ background: '#FAF8F5' }}>
-                    
-                    <div className="mb-3 flex absolute right-4">
-                        <img src="/src/images/icons/favorite.svg" className="w-[30px]" />
-                    </div>
+                    <SocialActions />
                     <div className="flex gap-2">
                         <span className="font-bold">ratings: <em style={{ color: '#005082' }}>{data?.vote_average ? data.vote_average : 'N/A'}</em></span>
                         <span className="font-bold">status: <em className="text-sm" style={{ color: '#005082' }}>{data?.status}</em></span>

@@ -14,7 +14,42 @@ import {
 } from '@tanstack/react-query'
 import { NotFound } from 'src/components/NotFound'
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 0,
+            gcTime: 0,
+            refetchOnWindowFocus: false,
+            refetchIntervalInBackground: false, // default: true
+            refetchInterval: false,
+            refetchOnReconnect: false, // default: always
+            refetchOnMount: false,
+            retryOnMount: false,
+            // throwOnError: (error: Error, query: Query<unknown, Error, unknown, any>) => {
+            //     const queryKey = query.queryKey.join(', ') || 'Unknown Query'
+
+            //     if (!loggedQueryErrors.has(queryKey)) {
+            //         logError('Query Error', {
+            //             message: error.message,
+            //             queryName: queryKey,
+            //         })
+            //         loggedQueryErrors.add(queryKey)
+            //     }
+
+            //     return false
+            // },
+        },
+    },
+    // mutationCache: new MutationCache({
+    //     onError: (error: Error, variables, context, mutation) => {
+    //         const mutationKey = mutation?.options?.mutationKey?.join(', ') || 'Unknown Mutation'
+    //         logError('Mutation Error', {
+    //             message: error.message,
+    //             mutationName: mutationKey,
+    //         })
+    //     },
+    // }),
+  })
 
 export const Route = createRootRoute({
     head: () => ({

@@ -77,8 +77,6 @@ function Home() {
         })
     ) ?? []
 
-    // const components = ['home, upcoming, favorites,']
-
     console.log(upcoming, 'upcoming show')
 
     return (
