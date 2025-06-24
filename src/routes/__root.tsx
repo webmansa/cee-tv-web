@@ -13,6 +13,7 @@ import {
     useQuery,
 } from '@tanstack/react-query'
 import { NotFound } from 'src/components/NotFound'
+import { ToastContainer } from 'react-toastify'
 
 export const queryClient = new QueryClient({
     defaultOptions: {
@@ -62,7 +63,7 @@ export const Route = createRootRoute({
                 content: 'width=device-width, initial-scale=1',
             },
             {
-                title: 'TanStack Start Starter',
+                title: 'CeeTV Movies/Series Listing',
             },
         ],
         links: [
@@ -78,6 +79,7 @@ function RootComponent() {
         <QueryClientProvider client={queryClient}>
             <RootDocument>
                 <Outlet />
+                <ToastContainer />
             </RootDocument>
         </QueryClientProvider>
         

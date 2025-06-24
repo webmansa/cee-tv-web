@@ -4,13 +4,15 @@ import { createServerFn } from '@tanstack/react-start'
 import * as fs from 'node:fs'
 import { Container } from 'src/components/Container'
 import { MovieCard } from 'src/components/MovieCard/MovieCard'
+import { MovieCardSkeleton } from 'src/components/MovieCardSkeleton'
 import { Slider } from 'src/components/Slider/Slider'
+import { SliderSkeleton } from 'src/components/SliderSkeleton'
 import { Title } from 'src/components/Title/Title'
 import { PageLayout } from 'src/layouts/PageLayout'
-import { useGetMovies } from 'src/services/useGetMovies'
-import { useGetRecommendations } from 'src/services/useGetRecommendations'
-import { useGetSeries } from 'src/services/useGetSeries'
-import { useGetUpcoming } from 'src/services/useGetUpcoming'
+import { useGetMovies } from 'src/services/queries/useGetMovies'
+import { useGetRecommendations } from 'src/services/queries/useGetRecommendations'
+import { useGetSeries } from 'src/services/queries/useGetSeries'
+import { useGetUpcoming } from 'src/services/queries/useGetUpcoming'
 import { UpcomingMovieResult } from 'src/types/upcomingMovie.types'
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl'
 
@@ -57,7 +59,7 @@ function Home() {
     const { data: recommendations, isLoading: isRecommendationsLoading } = useGetRecommendations()
     const { data: movies, isLoading: isMoviesLoading } = useGetMovies()
     const { data: series, isLoading: isSeriesLoading } = useGetSeries()
-    const { data: upcoming } = useGetUpcoming()
+    const { data: upcoming, isLoading: isUpComingLoading } = useGetUpcoming()
 
 
     const moviePosters = recommendations?.results.slice(0, 10).map(
@@ -85,12 +87,13 @@ function Home() {
             <>
                 <Title text="Trending" style={{ color: '#FAF8F5' }} />
                 
-                <div className="mb-8">
-                    {moviePosters && <Slider galleries={moviePosters} />}
+                    <div className="mb-8">
+                      
+                    { isRecommendationsLoading ? <SliderSkeleton /> : moviePosters && <Slider galleries={moviePosters} />}
                 </div>
 
                 <Container text="Latest Movies">
-                    {
+                        {isMoviesLoading ? <MovieCardSkeleton /> :
 
                         latestMovies && latestMovies.map(({ title, year, imgUrl, id }) => (
                             <Link to='/movie/$id' params={{ id }}>
@@ -101,14 +104,14 @@ function Home() {
                 </Container>
 
                 <Container text="Latest Series">
-                    {
+                    { isSeriesLoading ? <MovieCardSkeleton /> :
 
                         lastestSeries && lastestSeries.map(({ title, year, imgUrl, id }) => (<Link to='/series/$id' params={{ id }}><MovieCard title={title} imgUrl={imgUrl} year={year} /></Link>))
                     }
                     </Container>
                     
                 <Container text="Upcoming Movies">
-                    {
+                    { isUpComingLoading ? <MovieCardSkeleton /> :
 
                         upcomingMovies.length && upcomingMovies.map(({ title, year, imgUrl, id }) => (<Link to='/movie/$id' params={{ id: id.toString() }}><MovieCard title={title} imgUrl={imgUrl || ''} year={year} /></Link>))
                     }

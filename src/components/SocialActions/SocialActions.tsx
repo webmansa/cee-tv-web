@@ -1,16 +1,26 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons'
+import classNames from 'classnames'
 
 
 interface SocialActionsProps {
-    handleWatchlist?: () => void
+  onClick: React.MouseEventHandler<HTMLDivElement>
+  isFavorite: boolean,
 }
 
-export const SocialActions: React.FC<SocialActionsProps> = ({ handleWatchlist }) => {
-  return (
-        <div className="mb-3 flex absolute right-4 cursor-pointer">
-          <FontAwesomeIcon icon={faBookmark} className="text-2xl text-[#F54632] hover:text-[#005082] transition-all" title='add to watchlist'/>
-        </div>
-    )
+export const SocialActions: React.FC<SocialActionsProps> = ({ onClick, isFavorite }) => {
+  console.log(isFavorite, 'sdsdds')
+  return ( //  text-[${isFavorite ? '#F54632' : '#005082'}]
+    <div
+      className="mb-3 flex absolute right-4 cursor-pointer"
+      onClick={onClick}
+    >
+      <FontAwesomeIcon icon={faBookmark} className={`${classNames('fa-regular text-2xl transition-all', {
+        'text-[#F54632]': isFavorite,
+        'text-[#005082]': !isFavorite
+      })}`} title="add to watchlist" titleId="watchlist-icon" />
+    </div>
+  )
 }
+

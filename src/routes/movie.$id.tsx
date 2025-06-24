@@ -1,7 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState } from 'react'
+import { MovieCardSkeleton } from 'src/components/MovieCardSkeleton'
 import { SocialActions } from 'src/components/SocialActions/SocialActions'
+import prisma from 'src/config/prisma/exports'
 import { PageLayout } from 'src/layouts/PageLayout'
-import { useGetMovieDetail } from 'src/services/useGetMovieDetail'
+import { useCreateFavoriteWatchList } from 'src/services/mutations/useCreateFavoriteWatchList'
+import { useGetAllFavoriteMovie } from 'src/services/queries/useGetAllFavoriteMovie'
+import { useGetMovieDetail } from 'src/services/queries/useGetMovieDetail'
+import { dateConverter } from 'src/utils/dateConverter'
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl'
 
 export const Route = createFileRoute('/movie/$id')({
@@ -10,11 +16,15 @@ export const Route = createFileRoute('/movie/$id')({
 })
 
 function MovieDetail() {
-    const movieId = Route.useLoaderData()
+    const movieIdParams = Route.useLoaderData()
 
-    const { data, isLoading } = useGetMovieDetail(movieId)
+    const { data, isLoading } = useGetMovieDetail(movieIdParams)
+    const { data: favoriteMovies, refetch } = useGetAllFavoriteMovie()
+    
+    const { mutate: createWatchList } = useCreateFavoriteWatchList()
 
-    console.log(data)
+    const { isFavorite } = favoriteMovies?.find(({ movieID }) => movieID === movieIdParams) || {}
+
     return (
         <PageLayout content={
             <div className="relative">
@@ -35,13 +45,24 @@ function MovieDetail() {
                     </div>
                 </Link>
                 {
-                    isLoading ? <div> is loading...</div> : <div>
+                    isLoading ? <MovieCardSkeleton /> : <div>
                         <img src={getImdbImageUrl(data?.poster_path || '', 'w400') || ''} alt={data?.title} />
                     </div>
                 }
                 
                 <div className="p-4 relative" style={{ background: '#FAF8F5' }}>
-                    <SocialActions />
+                    <SocialActions isFavorite={Boolean(isFavorite)} onClick={() => {
+                        createWatchList({
+                            id: movieIdParams,
+                            title: data?.title || '',
+                            showType: 'movie',
+                            isFavorite: !isFavorite,
+                            image: getImdbImageUrl(data?.poster_path || '', 'w400') || '',
+                            year: data?.release_date ? dateConverter(data?.release_date) : '',
+                        })
+
+                        refetch() // refetch favorites
+                    }} />
                     <div className="flex gap-2">
                         <span className="font-bold">ratings: <em style={{ color: '#005082' }}>{data?.vote_average ? data.vote_average : 'N/A'}</em></span>
                         <span className="font-bold">status: <em className="text-sm" style={{ color: '#005082' }}>{data?.status}</em></span>
@@ -73,10 +94,13 @@ function MovieDetail() {
                         <span className="gen font-medium text-sm" style={{ color: '#005082' }}>{data?.runtime} mins</span>
                     </div>
 
-                    <div className="grid grid-cols-2 items-center">
-                        <div className="font-bold">Origin Language:</div>
-                        <span className="gen font-medium text-sm" style={{ color: '#005082' }}>{data?.spoken_languages[0].english_name}</span>
-                    </div>
+                    {
+                        Boolean(data?.spoken_languages.length) && <div className="grid grid-cols-2 items-center">
+                            <div className="font-bold">Origin Language:</div>
+                            <span className="gen font-medium text-sm" style={{ color: '#005082' }}>{data?.spoken_languages[0].english_name}</span>
+                        </div>
+                    }
+                   
                 </div>
             </div>
         } />

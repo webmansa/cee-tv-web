@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SeriesIdRouteImport } from './routes/series.$id'
 import { Route as MovieIdRouteImport } from './routes/movie.$id'
 
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,36 +37,47 @@ const MovieIdRoute = MovieIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/movie/$id': typeof MovieIdRoute
   '/series/$id': typeof SeriesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/movie/$id': typeof MovieIdRoute
   '/series/$id': typeof SeriesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/movie/$id': typeof MovieIdRoute
   '/series/$id': typeof SeriesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/movie/$id' | '/series/$id'
+  fullPaths: '/' | '/favorites' | '/movie/$id' | '/series/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/movie/$id' | '/series/$id'
-  id: '__root__' | '/' | '/movie/$id' | '/series/$id'
+  to: '/' | '/favorites' | '/movie/$id' | '/series/$id'
+  id: '__root__' | '/' | '/favorites' | '/movie/$id' | '/series/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FavoritesRoute: typeof FavoritesRoute
   MovieIdRoute: typeof MovieIdRoute
   SeriesIdRoute: typeof SeriesIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FavoritesRoute: FavoritesRoute,
   MovieIdRoute: MovieIdRoute,
   SeriesIdRoute: SeriesIdRoute,
 }

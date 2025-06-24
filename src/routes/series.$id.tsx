@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { MovieCardSkeleton } from 'src/components/MovieCardSkeleton'
 import { SocialActions } from 'src/components/SocialActions/SocialActions'
 import { PageLayout } from 'src/layouts/PageLayout/PageLayout'
-import { useGetSeriesDetails } from 'src/services/useGetSeriesDetails'
+import { useCreateFavoriteWatchList } from 'src/services/mutations/useCreateFavoriteWatchList'
+import { useGetAllFavoriteSeries } from 'src/services/queries/useGetAllFavoriteSeries'
+import { useGetSeriesDetails } from 'src/services/queries/useGetSeriesDetails'
+import { dateConverter } from 'src/utils/dateConverter'
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl'
 
 export const Route = createFileRoute('/series/$id')({
@@ -11,7 +15,14 @@ export const Route = createFileRoute('/series/$id')({
 
 function SeriesDetails() {
     const seriesId = Route.useLoaderData()
+
     const { data, isLoading } = useGetSeriesDetails(seriesId)
+    const { data: favoriteSeries, refetch } = useGetAllFavoriteSeries()
+
+    const { isFavorite } = favoriteSeries?.find(({ movieID }) => movieID === seriesId) || {}
+
+    const { mutate: createWatchList } = useCreateFavoriteWatchList()
+
 
     return (
         <PageLayout content={
@@ -33,13 +44,25 @@ function SeriesDetails() {
                     </div>
                 </Link>
                 {
-                    isLoading ? <div> is loading...</div> : <div>
+                    isLoading ? <MovieCardSkeleton /> : <div>
                         <img src={getImdbImageUrl(data?.poster_path || '', 'w400') || ''} alt={data?.name} />
                     </div>
                 }
 
                 <div className="p-4 relative" style={{ background: '#FAF8F5' }}>
-                    <SocialActions />
+                    <SocialActions isFavorite={Boolean(isFavorite)} onClick={() => {
+                        createWatchList({
+                            id: seriesId,
+                            title: data?.name || '',
+                            showType: 'serie',
+                            isFavorite: !isFavorite,
+                            image: getImdbImageUrl(data?.poster_path || '', 'w400') || '',
+                            year: data?.first_air_date ? dateConverter(data?.first_air_date) : '',
+
+                        })
+
+                        refetch() // refetch favorites
+                    }} />
 
                     <div className="flex gap-2">
                         <span className="font-bold">ratings: <em style={{ color: '#005082' }}>{data?.vote_average ? data.vote_average : 'N/A'}</em></span>

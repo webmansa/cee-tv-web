@@ -5,6 +5,7 @@ export const MovieCard = ({ imgUrl, title, year }: { imgUrl: string; title: stri
         <article className="cursor-pointer">
             <figure className="w-[200px]">
                 <img
+                    className="min-h-[300px]"
                     src={imgUrl}
                     alt={title} />
                 <figcaption className="h-[30px] px-1.5 flex items-center text-sm mt-3 justify-center" style={{ background: '#FAF8F5' }}>{title}</figcaption>
