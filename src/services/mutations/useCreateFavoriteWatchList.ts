@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Bounce, Slide, toast } from "react-toastify";
 import { handleWatchList, WatchListMutationVariables } from "src/actions/handleWatchList";
+import { queryClient } from "src/routes/__root";
 
 
   export const useCreateFavoriteWatchList = () =>
@@ -10,8 +11,10 @@ import { handleWatchList, WatchListMutationVariables } from "src/actions/handleW
           data: mutationVariable,
         }),
       mutationKey: ["create-watchlist"],
-      onSuccess: (data, variable, context) => {
-        toast(`🎬 successfully added ${variable.title} to favorite!`, {
+      onSuccess: (_, variable) => {
+        const text = variable.isFavorite ? 'added' : 'removed'
+
+        toast(`🎬 Successfully ${text} ${variable.title} to favorite!`, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -22,6 +25,10 @@ import { handleWatchList, WatchListMutationVariables } from "src/actions/handleW
           theme: "light",
           transition: Slide,
         });
+
+        variable.showType == "movie"
+          ? queryClient.invalidateQueries({ queryKey: ["favorite-movies"] })
+          : queryClient.invalidateQueries({ queryKey: ["favorite-series"] });
       },
       onError: (error, variables, context) => {
         toast.error(JSON.stringify(error.message), {

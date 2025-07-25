@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import {
@@ -63,11 +63,16 @@ export const Route = createRootRoute({
                 content: 'width=device-width, initial-scale=1',
             },
             {
+                name: 'theme-color',
+                content: '#F54632',
+            },
+            {
                 title: 'CeeTV Movies/Series Listing',
             },
         ],
         links: [
             { rel: 'stylesheet', href: '/src/styles/app.css' },
+            { rel: 'manifest', href: '/manifest.webmanifest' },
         ]
     }),
     notFoundComponent: () => <NotFound />,
@@ -75,6 +80,21 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+    // Register service worker for PWA support
+    useEffect(() => {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => {
+                        console.log('Service worker registered:', reg);
+                    })
+                    .catch(err => {
+                        console.error('Service worker registration failed:', err);
+                    });
+            });
+        }
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
             <RootDocument>

@@ -10,8 +10,7 @@ interface SocialActionsProps {
 }
 
 export const SocialActions: React.FC<SocialActionsProps> = ({ onClick, isFavorite }) => {
-  console.log(isFavorite, 'sdsdds')
-  return ( //  text-[${isFavorite ? '#F54632' : '#005082'}]
+  return (
     <div
       className="mb-3 flex absolute right-4 cursor-pointer"
       onClick={onClick}

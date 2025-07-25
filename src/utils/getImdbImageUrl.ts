@@ -6,3 +6,4 @@ export function getImdbImageUrl(filePath: string, size = "w500") {
   }
   return `${tmdb.imgUrl}${size}${filePath}`;
 }
+

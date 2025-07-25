@@ -13,6 +13,8 @@ model Movie {
   movieID    String
   title      String
   isFavorite Boolean
+  image String?
+  year String
 }
 
 model Series {
@@ -20,4 +22,6 @@ model Series {
   movieID    String
   title      String
   isFavorite Boolean
+  image String?
+  year String
 }

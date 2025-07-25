@@ -53,18 +53,11 @@ export interface IMovie {
 }
 
 function Home() {
-    const router = useRouter()
-    const state = Route.useLoaderData()
-
-    const { data: recommendations, isLoading: isRecommendationsLoading } = useGetRecommendations()
     const { data: movies, isLoading: isMoviesLoading } = useGetMovies()
     const { data: series, isLoading: isSeriesLoading } = useGetSeries()
     const { data: upcoming, isLoading: isUpComingLoading } = useGetUpcoming()
 
 
-    const moviePosters = recommendations?.results.slice(0, 10).map(
-        ({ poster_path, title }: Movie) => ({ item: getImdbImageUrl(poster_path, 'w400'), title })
-    )
 
     const latestMovies: Array<{ title: string; year: string; imgUrl: string; id: string }> = movies?.results?.map(({ title, release_date, poster_path, id }: IMovie) => ({ title, year: release_date, imgUrl: getImdbImageUrl(poster_path, 'w200'), id }))
 
@@ -85,13 +78,6 @@ function Home() {
         <PageLayout
             content={
             <>
-                <Title text="Trending" style={{ color: '#FAF8F5' }} />
-                
-                    <div className="mb-8">
-                      
-                    { isRecommendationsLoading ? <SliderSkeleton /> : moviePosters && <Slider galleries={moviePosters} />}
-                </div>
-
                 <Container text="Latest Movies">
                         {isMoviesLoading ? <MovieCardSkeleton /> :
 

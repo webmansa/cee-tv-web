@@ -26,7 +26,7 @@ function SeriesDetails() {
 
     return (
         <PageLayout content={
-            <div className="relative">
+            <>
                 <Link to='/'>
                     <div className="rotate-180 w-[40px] h-[40px] rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 active:scale-90 absolute left-4 top-4" style={{ background: '#ffffff33' }}>
                         <svg width="16.768" height="17.499" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@ function SeriesDetails() {
                 </Link>
                 {
                     isLoading ? <MovieCardSkeleton /> : <div>
-                        <img src={getImdbImageUrl(data?.poster_path || '', 'w400') || ''} alt={data?.name} />
+                        {data?.poster_path && <img src={getImdbImageUrl(data?.poster_path || '', 'w400') || ''} alt={data?.name} />} 
                     </div>
                 }
 
@@ -60,8 +60,6 @@ function SeriesDetails() {
                             year: data?.first_air_date ? dateConverter(data?.first_air_date) : '',
 
                         })
-
-                        refetch() // refetch favorites
                     }} />
 
                     <div className="flex gap-2">
@@ -120,7 +118,7 @@ function SeriesDetails() {
                         <span className="gen font-medium text-sm" style={{ color: '#005082' }}>{data?.networks.map(({ name }) => name).join(', ')}</span>
                     </div>
                 </div>
-            </div>
+            </>
         } />
     )
 }

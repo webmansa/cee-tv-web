@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router';
-import React from 'react'
+import { Link, useRouter } from '@tanstack/react-router';
+import React, { useEffect } from 'react'
 import { dateConverter } from 'src/utils/dateConverter';
 import { getImdbImageUrl } from 'src/utils/getImdbImageUrl';
 import { Title } from '../Title/Title';
@@ -14,20 +14,37 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ( {handleSearchQuery, searchTerm, isLoading, data }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleBackspace = (e: KeyboardEvent) => {
+      // Only trigger if not focused on an input or textarea
+      const active = document.activeElement;
+      const isInput = active && (active.tagName === 'INPUT' || (active as HTMLElement).isContentEditable);
+      if (e.key === 'Backspace' && !isInput) {
+        e.preventDefault();
+        router.history.back();
+      }
+    };
+    window.addEventListener('keydown', handleBackspace);
+    return () => window.removeEventListener('keydown', handleBackspace);
+  }, [router]);
+
   return (
-    <header className="h-32 p-4" style={{ background: '#F54632' }}>
+    <header className="h-20 p-4 z-10 flex items-center gap-4 sticky top-0 bg-gradient-to-r from-[#F54632] to-[#1E2129]">
       <div className="flex">
-        {/* <span><img src="/src/images/ceetv.png" /></span> */}
-        <Title text="Discover" style={{ color: '#FAF8F5' }} />
+        <Link to="/">
+          <img src="/src/images/ceetv.png" alt="CEE TV" className="w-20" />
+        </Link>
       </div>
 
       <form
         id="form"
-        className="relative"
+        className="relative w-full flex justify-center"
         onSubmit={handleSearchQuery}
       >
         <>
-          <div className='flex w-full justify-between items-center relative'>
+          <div className='w-8/12'>
             <input
               name="searchTerm"
               type="search"
@@ -35,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ( {handleSearchQuery, searchTerm, i
                 'rounded-bl-none rounded-br-none rounded-tr-lg rounded-tl-lg': searchTerm,
                 'rounded-2xl': !searchTerm
               })}
-              placeholder="Search your favorite movies or series"
+              placeholder="Search your favorite movies / series / social events"
             />
 
             {isLoading && (
@@ -133,6 +150,8 @@ export const Header: React.FC<HeaderProps> = ( {handleSearchQuery, searchTerm, i
           }
         </>
       </form>
+
+      <div className="grow-0 w-[120px]"> social link here</div>
     </header>
   )
 }

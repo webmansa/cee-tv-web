@@ -27,7 +27,7 @@ function MovieDetail() {
 
     return (
         <PageLayout content={
-            <div className="relative">
+            <>
                 <Link to='/'>
                     <div className="rotate-180 w-[40px] h-[40px] rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 active:scale-90 absolute left-4 top-4" style={{ background: '#ffffff33' }}>
                         <svg width="16.768" height="17.499" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,7 +102,7 @@ function MovieDetail() {
                     }
                    
                 </div>
-            </div>
+            </>
         } />
     )
 }

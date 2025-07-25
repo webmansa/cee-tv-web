@@ -22,33 +22,61 @@ export const handleWatchList = createServerFn({
   .validator(WatchListMutationVariablesSchema)
   .handler(async ({ data: { id, title, showType, isFavorite, image, year } }) => {
     const model = showType === "movie" ? prisma.movie : prisma.series;
+    let existingItem = null;
 
-    if (showType === "movie") {
-      const existing = await prisma.movie.findUnique({
-        where: { id: Number(id) },
+    try {
+      switch (showType) {
+        case "movie":
+          existingItem = await prisma.movie.findFirst({
+            where: {
+              movieID: id,
+            },
+          });
+          break;
+
+        case "serie":
+          existingItem = await prisma.series.findFirst({
+            where: {
+              movieID: id,
+            },
+          });
+      }
+    } catch (error) {
+      console.error(`Error finding existing ${showType} with movieID ${id}:`, error);
+    }
+
+    if (existingItem && showType === "movie") {
+      console.log("inside the if block....");
+      await prisma.movie.update({
+        where: {
+          id: existingItem.id,
+        },
+        data: {
+          isFavorite,
+        },
       });
 
-      if (existing) {
-        await prisma.movie.update({
+      return
+    } else if (existingItem && showType === "serie") {
+        await prisma.series.update({
           where: {
-            id: Number(id),
+            id: existingItem.id,
           },
           data: {
-            title,
-            movieID: id,
             isFavorite,
           },
         });
-      } else {
-        await model.create({
-          data: {
-            title,
-            movieID: id,
-            isFavorite,
-            image,
-            year,
-          },
-        });
+
+        return
       }
-    }
+
+    await model.create({
+      data: {
+        title,
+        movieID: id,
+        isFavorite,
+        image,
+        year,
+      },
+    });
   });

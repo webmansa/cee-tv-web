@@ -29,13 +29,13 @@ export const PageLayout = ({ content }: { content: React.ReactNode }) => {
     }, [searchTerm])
 
     return (
-        <div className="m-auto w-[400px] relative">
+        <div className="m-auto w-full">
             <Header handleSearchQuery={handleSearchQuery} isLoading={isLoading} data={data} searchTerm={searchTerm} />
 
-            <div className='p-4' style={{ backgroundColor: '#1e2129' }}>
+            <div className='p-4 relative' style={{ backgroundColor: '#1e2129' }}>
                 {content}
             </div>
-            <nav className='fixed h-10 w-full bottom-0 text-white flex gap-2 items-center px-4 transition-all' style={{ background: 'rgb(245, 70, 50)' }}>
+            <nav className='h-10 text-white flex gap-2 items-center px-4 transition-all fixed bottom-0 w-full' style={{ background: 'rgb(245, 70, 50)' }}>
                 <Link to="/" title='Home' style={{ color: 'rgb(250, 248, 245)' }} className='p-1 px-2 rounded-sm'>/Home</Link>
                 <Link to="/favorites" title='Favorites' style={{ color: 'rgb(250, 248, 245)' }} className='p-1 px-2 rounded-sm'>/Favorites</Link>
             </nav>
